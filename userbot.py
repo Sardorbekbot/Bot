@@ -51,7 +51,7 @@ async def handle_afk_message(event):
 
 async def update_profile_time():
     while time_status:
-        now = datetime.now()
+        now = datetime.now(pytz.timezone('Asia/Tashkent'))
         time_str = now.strftime("| %H : %M")
         next_update = (now + timedelta(minutes=1)).replace(second=0, microsecond=0)
         delay = (next_update - now).total_seconds()
@@ -65,22 +65,6 @@ async def update_profile_time():
             print(f"Xatolik yuz berdi: {e}")
 
         await asyncio.sleep(delay)
-
-@client.on(events.NewMessage(pattern=r'\.soaton'))
-async def set_time_on(event):
-    global time_status
-    time_status = True
-    asyncio.create_task(update_profile_time())
-    await event.edit('<emoji document_id=5454415424319931791>⌚</emoji> <b>Nick va bio ga soat qõyildi</b>',parse_mode="HTML")
-
-@client.on(events.NewMessage(pattern=r'\.soatoff'))
-async def set_time_off(event):
-    global time_status
-    time_status = False
-    await client(functions.account.UpdateProfileRequest(last_name=""))
-    await client(functions.account.UpdateProfileRequest(about=""))
-    await event.edit('<emoji document_id=5462928646501055704>🥲</emoji> <b>Nick va bio dagi soatlar ochirildi</b>', parse_mode="HTML")
-
 # Ovozli memlar funksiyalari
 class FakeMod:
     def __init__(self, client):
